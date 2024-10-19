@@ -6,15 +6,17 @@
 
 .grid{
   border: 1px solid black;
+  box-sizing: border-box;
 }
 html{
 }
 #canva{
-  height: 90vh;
-  width: 90vh;
+  height: 50vh;
+  width: 50vh;
   background: white;
   display:flex;
   justify-content: start;
-  align-content: start;
+  align-items: start;
   border: 1px solid black;
+  flex-wrap: wrap;
 }
