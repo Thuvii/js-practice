@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link href="style/style.css" rel="stylesheet">
-  <script src="index.js" defer></script>
-</head>
-
-<body>
-  <div id="container">
-    <div class="options">
-      <div class="row-inputs">
-        <input id="row" type="range" min="0" max="32" step="1" name="colum">
-        <div>
-          Row : <output class="row-value">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="options">
+        <div class="opt-wrapper">
+          <div class="slider">
+            <label for="width-range">Grid Width</label>
+            <input type="range" id="width-range" min="1" max="32" />
+            <span id="width-value">00</span>
+          </div>
+          <div class="slider">
+            <label for="height-range">Grid Height</label>
+            <input type="range" id="height-range" min="1" max="32" />
+            <span id="height-value">00</span>
+          </div>
+        </div>
+        <div class="opt-wrapper">
+          <button id="submit-grid">Create grid</button>
+          <button id="clear-grid">Clear grid</button>
+          <input type="color" id="color-input" />
+          <button id="erase-btn">Erase</button>
+          <button id="paint">Paint</button>
         </div>
       </div>
-      <div class="column-inputs">
-        <input id="column" type="range" min="0" max="32" step="1" name="colum">
-        <div>
-          Column : <output class="column-value">
-        </div>
-      </div>
-        <button type="button" class="createBtn">Create</button>
+      <div class="container"></div>
     </div>
-  </div>
-  <div id="canva"></div>
-
-</body>
+    <script src="index.js"></script>
+  </body>
 </html>

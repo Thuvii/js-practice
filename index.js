@@ -1,45 +1,121 @@
-var rowInput = document.getElementById("row");
-var rowValue = document.querySelector(".row-value");
-var columnInput = document.getElementById("column");
-var columnValue = document.querySelector(".column-value");
+var container = document.querySelector('.container')
+var gridButton = document.getElementById('submit-grid')
+var clearGridButton = document.getElementById('clear-grid')
+var gridWidth = document.getElementById('width-range')
+var widthValue = document.getElementById('width-value')
+var gridHeight = document.getElementById('height-range')
+var heightValue = document.getElementById('height-value')
+var colorButton = document.getElementById('color-input')
+var paintButton = document.getElementById('paint')
+var eraseButton = document.getElementById('erase-btn')
 
-var canva = document.getElementById("canva");
-var createBtn = document.querySelector('.createBtn')
+let events = {
+    mouse:{
+        down:"mousedown",
+        move:"mousemove",
+        up:"mouseup"
+    },
+    touch: {
+        down:"touchstart",
+        mobe: "touchmove",
+        up: "touchend"
+    }
+}
+
+let deviceType = ""
+let draw = false
+let erase = false
+
+const isTouchDevice  = ()=>{
+    try{
+        document.createEvent("TouchEvent");
+        deviceType ="touch"
+        return true;
+    } catch(e){
+        deviceType = "mouse"
+        return false
+    }
+}
+isTouchDevice()
+
+gridButton.addEventListener("click", ()=>{
+    container.innerHTML = "";
+    let count = 0;
+
+    for(let i = 0; i < gridHeight.value; i++){
+        count+=2
+        let div = document.createElement("div")
+        div.classList.add("gridRow")
+
+        for(let j = 0; j < gridWidth.value; j++){
+            count += 2;
+            let col = document.createElement("div")
+            col.classList.add("gridCol")
+            col.setAttribute("id", `gridCol${count}`)
+
+            col.addEventListener(events[deviceType].down, ()=>{
+                draw = true
+                if(erase){
+                    col.style.backgroundColor = "transparent"
+                }else{
+                    col.style.backgroundColor = colorButton.value;
+                }
+            })
+
+            col.addEventListener(events[deviceType].move, (e)=>{
+                let elementId = document.elementFromPoint(
+                    !isTouchDevice() ? e.clientX : e.touches[0].clientX,
+                    !isTouchDevice() ? e.clientY : e.touches[0].clientY,
+                ).id;
+                checker(elementId)
+            })
+            
+            col.addEventListener(events[deviceType].up, ()=>{
+                draw = false;
+            })
+
+            div.appendChild(col)
+        }
+        container.appendChild(div);
+    }
+});
 
 
+function checker(elementId){
+    let gridColumn = document.querySelectorAll(".gridCol")
+    gridColumn.forEach((element)=>{
+        if(elementId == element.id){
+            if(draw && !erase){
+                element.style.backgroundColor = colorButton.value
+            }else if(draw && erase){
+                element.style.backgroundColor = "transparent"
+            }
+        }
+    })
+}
+
+
+clearGridButton.addEventListener("click", () => {
+    container.innerHTML = "";
+});
+
+eraseButton.addEventListener("click", () => {
+    erase = true;
+});
+
+paintButton.addEventListener("click", () => {
+    erase = false;
+});
+
+gridWidth.addEventListener("input", () => {
+    widthValue.innerHTML = gridWidth.value < 9 ? `0${gridWidth.value}` : gridWidth.value;
+});
+
+gridHeight.addEventListener("input", () => {
+    heightValue.innerHTML = gridHeight.value < 9 ? `0${gridHeight.value}` : gridHeight.value;
+});
 
 window.onload = () => {
-  columnInput.value = 0;
-  rowInput.value = 0;
-  columnValue.textContent = 0;
-  rowValue.textContent = 0;
+    gridHeight.value = 0;
+    gridWidth.value = 0;
 };
-columnValue.textContent = columnInput.value;
-rowValue.textContent = rowInput.value;
-
-function rangeInput(inputValue, outputValue) {
-  inputValue.addEventListener("input", (event) => {
-    outputValue.textContent = event.target.value;
-  });
-}
-rangeInput(rowInput, rowValue);
-rangeInput(columnInput, columnValue);
-
-function createCanva(columnValue, rowValue) {
-  var canvaSize = parseInt(columnValue) * parseInt(rowValue);
-  var columnCount = parseInt(columnValue);
-  var rowCount = parseInt(rowValue);
-  canva.innerHTML = "";
-  for (var i = 0; i < canvaSize; i++) {
-    const box = document.createElement("div");
-    box.classList.add("grid");
-    box.style.flex = `1 0 calc(100% / ${columnCount})`;
-    box.style.height = `calc(100% / ${columnCount})`;
-    
-    canva.appendChild(box)
-  }
-}
-
-createBtn.addEventListener('click',()=>createCanva(columnInput.value, rowInput.value))
-
-
